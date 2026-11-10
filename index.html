@@ -86,8 +86,8 @@
     <script type="module">
         import { GoogleGenAI } from "@google/genai";
 
-        // Inicialización segura con tu clave de API integrada
-        const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6JbEcWwiN262li_JYoVmCfemJmTq-vbyex6twlWvLqvZA" });
+        // Inicialización con tu clave legítima de AI Studio
+        const ai = new GoogleGenAI({ apiKey: "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs" });
 
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
@@ -147,7 +147,7 @@
 
             } catch (error) {
                 document.getElementById(loadingId)?.remove();
-                console.p("Error de conexión:", error);
+                console.error("Error de conexión:", error);
                 appendMessage('ai', `<span class="text-rose-400">Error de conexión: ${error.message || error}</span>`);
             }
         }
@@ -184,7 +184,7 @@
                 micBtn.classList.remove('bg-indigo-600', 'text-white');
             };
         } else {
-            micBtn.style.display = 'none'; // Ocultar si el navegador no lo soporta
+            micBtn.style.display = 'none';
         }
     </script>
 </body>
