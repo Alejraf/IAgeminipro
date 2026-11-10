@@ -9,6 +9,14 @@
         body { background-color: #0f172a; color: #f8fafc; }
         .chat-box { max-height: 50vh; overflow-y: auto; }
     </style>
+    <!-- Import Map para cargar el SDK oficial de Google de forma limpia -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.sh/@google/genai"
+        }
+      }
+    </script>
 </head>
 <body class="min-h-screen flex flex-col justify-between p-4 max-w-4xl mx-auto">
 
@@ -64,12 +72,12 @@
 
     <!-- Input, Micrófono y Botón de Enviar -->
     <footer class="mt-2">
-        <form id="chat-form" onsubmit="sendMessage(event)" class="bg-slate-800 border border-slate-700 rounded-2xl p-2 flex items-center shadow-lg">
+        <form id="chat-form" class="bg-slate-800 border border-slate-700 rounded-2xl p-2 flex items-center shadow-lg">
             <input type="text" id="user-input" placeholder="Envía un mensaje o usa el micrófono..." autocomplete="off" class="bg-transparent flex-1 px-3 text-sm text-slate-200 focus:outline-none placeholder-slate-500">
             
             <div class="flex items-center space-x-2 ml-2">
                 <!-- Botón de Micrófono -->
-                <button id="mic-btn" type="button" onclick="startVoiceInput()" title="Dictado por voz" class="p-2 hover:bg-slate-700 rounded-full text-blue-400 transition flex items-center justify-center">
+                <button id="mic-btn" type="button" title="Dictado por voz" class="p-2 hover:bg-slate-700 rounded-full text-blue-400 transition flex items-center justify-center">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                         <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
@@ -86,15 +94,18 @@
         </form>
     </footer>
 
-    <!-- Lógica JavaScript Optimizada -->
-    <script>
-        const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
+    <!-- Lógica en Módulo JS nativo con SDK oficial -->
+    <script type="module">
+        import { GoogleGenAI } from "@google/genai";
 
-        function setPrompt(text) {
+        const ai = new GoogleGenAI({ apiKey: "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs" });
+
+        window.setPrompt = function(text) {
             document.getElementById('user-input').value = text;
-        }
+        };
 
-        function startVoiceInput() {
+        const micBtn = document.getElementById('mic-btn');
+        micBtn.addEventListener('click', () => {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
                 alert("Tu navegador no soporta el reconocimiento de voz.");
@@ -103,8 +114,7 @@
             const recognition = new SpeechRecognition();
             recognition.lang = 'es-ES';
             recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
+            
             const input = document.getElementById('user-input');
             input.placeholder = "Escuchando...";
 
@@ -118,9 +128,10 @@
             };
 
             recognition.start();
-        }
+        });
 
-        async function sendMessage(e) {
+        const chatForm = document.getElementById('chat-form');
+        chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const input = document.getElementById('user-input');
             const message = input.value.trim();
@@ -151,27 +162,13 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-                const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(targetUrl);
-                
-                const response = await fetch(proxyUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: message }] }]
-                    })
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: message,
                 });
 
-                const data = await response.json();
                 document.getElementById(loadingId).remove();
-
-                // Extracción robusta de la respuesta
-                let aiText = "No se pudo obtener una respuesta.";
-                if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-                    aiText = data.candidates[0].content.parts[0].text;
-                } else if (data.error) {
-                    aiText = "Error de API: " + data.error.message;
-                }
+                const aiText = response.text || "No se pudo obtener una respuesta.";
 
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
@@ -181,14 +178,17 @@
                 chatContainer.scrollTop = chatContainer.scrollHeight;
 
             } catch (err) {
-                document.getElementById(loadingId).remove();
+                const loadingElem = document.getElementById(loadingId);
+                if (loadingElem) loadingElem.remove();
+                
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
-                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión con el servidor.</div>
+                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión: ${escapeHtml(err.message || 'Fallo de API')}</div>
                     </div>
                 `;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }
-        }
+        });
 
         function escapeHtml(text) {
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
