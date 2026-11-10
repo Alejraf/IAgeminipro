@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini Studio AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SDK oficial de Google Generative AI para navegador -->
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/genai": "https://esm.run/@google/genai"
-        }
-      }
-    </script>
     <style>
         body { background-color: #0f172a; color: #f8fafc; }
         .chat-box { max-height: 50vh; overflow-y: auto; }
@@ -94,17 +86,15 @@
         </form>
     </footer>
 
-    <!-- Lógica con GoogleGenAI SDK Oficial -->
-    <script type="module">
-        import { GoogleGenAI } from "@google/genai";
+    <!-- Lógica JavaScript Directa y Estable -->
+    <script>
+        const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
 
-        const ai = new GoogleGenAI({ apiKey: "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs" });
-
-        window.setPrompt = function(text) {
+        function setPrompt(text) {
             document.getElementById('user-input').value = text;
         }
 
-        window.startVoiceInput = function() {
+        function startVoiceInput() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
                 alert("Tu navegador no soporta el reconocimiento de voz.");
@@ -130,7 +120,7 @@
             recognition.start();
         }
 
-        window.sendMessage = async function(e) {
+        async function sendMessage(e) {
             e.preventDefault();
             const input = document.getElementById('user-input');
             const message = input.value.trim();
@@ -161,26 +151,40 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                const response = await ai.models.generateContent({
-                    model: 'gemini-2.5-flash',
-                    contents: message,
+                // Usando el modelo v1 de la API directa de Gemini compatible con navegador
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
+                
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: message }] }]
+                    })
                 });
 
+                const data = await response.json();
                 document.getElementById(loadingId).remove();
-                const aiText = response.text || "No se pudo obtener una respuesta.";
 
-                chatContainer.innerHTML += `
-                    <div class="flex justify-start">
-                        <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%] whitespace-pre-wrap">${escapeHtml(aiText)}</div>
-                    </div>
-                `;
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    chatContainer.innerHTML += `
+                        <div class="flex justify-start">
+                            <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%] whitespace-pre-wrap">${escapeHtml(aiText)}</div>
+                        </div>
+                    `;
+                } else if (data.error) {
+                    throw new Error(data.error.message);
+                } else {
+                    throw new Error("Respuesta vacía");
+                }
+                
                 chatContainer.scrollTop = chatContainer.scrollHeight;
 
             } catch (err) {
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
-                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión con la API de Gemini.</div>
+                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error: ${escapeHtml(err.message || 'No se pudo conectar')}</div>
                     </div>
                 `;
             }
