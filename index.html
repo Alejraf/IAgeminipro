@@ -9,9 +9,6 @@
         body { background-color: #0f172a; color: #f8fafc; }
         .chat-box { max-height: 50vh; overflow-y: auto; }
     </style>
-    
-    <!-- FUTURO SCRIPT GENERAL DE GOOGLE ADSENSE -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-AQUI_TU_ID_DE_PUB" crossorigin="anonymous"></script> -->
 </head>
 <body class="min-h-screen flex flex-col justify-between p-4 max-w-4xl mx-auto">
 
@@ -22,22 +19,12 @@
             <h1 class="font-bold text-lg tracking-wide">Gemini Studio AI</h1>
         </div>
         <div class="flex items-center space-x-3">
-            <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 font-medium">En línea</span>
+            <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 font-medium">IA Activa</span>
         </div>
     </header>
 
     <!-- BLOQUE PUBLICITARIO SUPERIOR (AdSense Header) -->
     <div class="my-3 border border-slate-800 bg-slate-900/60 rounded-xl p-2 text-center text-xs text-slate-400 min-h-[90px] flex items-center justify-center">
-        <!-- Espacio reservado para banner publicitario de AdSense -->
-        <!-- 
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-AQUI_TU_ID_DE_PUB"
-             data-ad-slot="AQUI_TU_SLOT"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        -->
         <div class="w-full">
             <p class="font-semibold text-slate-300 mb-1">Publicidad Patrocinada</p>
             <p class="text-[10px] text-slate-500">Banner Adaptable AdSense (728x90 / Responsive)</p>
@@ -68,15 +55,6 @@
 
         <!-- BLOQUE PUBLICITARIO INTERMEDIO (AdSense In-Feed) -->
         <div class="my-3 border border-slate-800 bg-slate-900/60 rounded-xl p-2 text-center text-xs text-slate-400 min-h-[90px] flex items-center justify-center">
-            <!-- 
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-fb+5w+4e-db+86"
-                 data-ad-client="ca-pub-AQUI_TU_ID_DE_PUB"
-                 data-ad-slot="AQUI_TU_SLOT"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            -->
             <div class="w-full">
                 <p class="font-semibold text-slate-300 mb-1">Anuncio Patrocinado</p>
                 <p class="text-[10px] text-slate-500">Banner Horizontal In-Feed</p>
@@ -84,20 +62,62 @@
         </div>
     </main>
 
-    <!-- Input y Botón de Enviar -->
+    <!-- Input, Micrófono y Botón de Enviar -->
     <footer class="mt-2">
         <form id="chat-form" onsubmit="sendMessage(event)" class="bg-slate-800 border border-slate-700 rounded-2xl p-2 flex items-center shadow-lg">
-            <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autocomplete="off" class="bg-transparent flex-1 px-3 text-sm text-slate-200 focus:outline-none placeholder-slate-500">
-            <button type="submit" id="send-btn" class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full transition flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            </button>
+            <input type="text" id="user-input" placeholder="Envía un mensaje o usa el micrófono..." autocomplete="off" class="bg-transparent flex-1 px-3 text-sm text-slate-200 focus:outline-none placeholder-slate-500">
+            
+            <div class="flex items-center space-x-2 ml-2">
+                <!-- Botón de Micrófono -->
+                <button id="mic-btn" type="button" onclick="startVoiceInput()" title="Dictado por voz" class="p-2 hover:bg-slate-700 rounded-full text-blue-400 transition flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </button>
+                
+                <!-- Botón de Enviar -->
+                <button type="submit" id="send-btn" class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full transition flex items-center justify-center shadow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
         </form>
     </footer>
 
-    <!-- Lógica JavaScript Operativa -->
+    <!-- Lógica JavaScript con API de Gemini y Reconocimiento de Voz -->
     <script>
+        const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
+
         function setPrompt(text) {
             document.getElementById('user-input').value = text;
+        }
+
+        function startVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Tu navegador no soporta el reconocimiento de voz.");
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'es-ES';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            const input = document.getElementById('user-input');
+            input.placeholder = "Escuchando...";
+
+            recognition.onresult = (event) => {
+                input.value = event.results[0][0].transcript;
+                input.placeholder = "Envía un mensaje o usa el micrófono...";
+            };
+
+            recognition.onerror = recognition.onend = () => {
+                input.placeholder = "Envía un mensaje o usa el micrófono...";
+            };
+
+            recognition.start();
         }
 
         async function sendMessage(e) {
@@ -125,22 +145,42 @@
             const loadingId = 'loading-' + Date.now();
             chatContainer.innerHTML += `
                 <div id="${loadingId}" class="flex justify-start">
-                    <div class="bg-slate-800 border border-slate-700 text-slate-400 text-sm rounded-2xl px-4 py-2 animate-pulse">Procesando...</div>
+                    <div class="bg-slate-800 border border-slate-700 text-slate-400 text-sm rounded-2xl px-4 py-2 animate-pulse">Pensando...</div>
                 </div>
             `;
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            setTimeout(() => {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: message }] }]
+                    })
+                });
+
+                const data = await response.json();
                 document.getElementById(loadingId).remove();
+
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo obtener una respuesta.";
+
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
-                        <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%]">
-                            Has enviado: <strong>"${escapeHtml(message)}"</strong>. La aplicación está lista y respondiendo adecuadamente.
-                        </div>
+                        <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%] whitespace-pre-wrap">${escapeHtml(aiText)}</div>
                     </div>
                 `;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 800);
+
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                chatContainer.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión con la API de Gemini.</div>
+                    </div>
+                `;
+            }
         }
 
         function escapeHtml(text) {
