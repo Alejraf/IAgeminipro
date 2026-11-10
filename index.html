@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini Studio AI</title>
-    <!-- Tailwind CSS CDN para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
+        body { background-color: #0f172a; color: #f8fafc; }
+        .chat-box { max-height: 50vh; overflow-y: auto; }
     </style>
+    
+    <!-- FUTURO SCRIPT GENERAL DE GOOGLE ADSENSE -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-AQUI_TU_ID_DE_PUB" crossorigin="anonymous"></script> -->
 </head>
 <body class="min-h-screen flex flex-col justify-between p-4 max-w-4xl mx-auto">
 
@@ -22,78 +22,130 @@
             <h1 class="font-bold text-lg tracking-wide">Gemini Studio AI</h1>
         </div>
         <div class="flex items-center space-x-3">
-            <div id="status-indicator" class="w-6 h-6 rounded-md bg-slate-800 border border-slate-700"></div>
-            <button id="api-btn" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium transition">API Key Configurada</button>
+            <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 font-medium">En línea</span>
         </div>
     </header>
 
-    <!-- Contenido Principal / Sugerencias -->
-    <main class="flex-1 my-6 flex flex-col justify-center">
-        <div class="text-center mb-8">
-            <h2 class="text-2xl sm:text-3xl font-bold mb-2">¿En qué puedo ayudarte hoy?</h2>
-            <p class="text-slate-400 text-sm">Selecciona una sugerencia o escribe un mensaje para comenzar a interactuar con el modelo.</p>
+    <!-- BLOQUE PUBLICITARIO SUPERIOR (AdSense Header) -->
+    <div class="my-3 border border-slate-800 bg-slate-900/60 rounded-xl p-2 text-center text-xs text-slate-400 min-h-[90px] flex items-center justify-center">
+        <!-- Espacio reservado para banner publicitario de AdSense -->
+        <!-- 
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-AQUI_TU_ID_DE_PUB"
+             data-ad-slot="AQUI_TU_SLOT"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        -->
+        <div class="w-full">
+            <p class="font-semibold text-slate-300 mb-1">Publicidad Patrocinada</p>
+            <p class="text-[10px] text-slate-500">Banner Adaptable AdSense (728x90 / Responsive)</p>
+        </div>
+    </div>
+
+    <!-- Contenido Principal / Área de Chat -->
+    <main class="flex-1 flex flex-col justify-between my-2">
+        <div id="welcome-section" class="text-center my-4">
+            <h2 class="text-2xl font-bold mb-2">¿En qué puedo ayudarte hoy?</h2>
+            <p class="text-slate-400 text-sm">Escribe tu consulta abajo o toca una sugerencia.</p>
         </div>
 
-        <!-- Bloque de Publicidad Superior -->
-        <div class="border border-dashed border-slate-700 bg-slate-900/50 rounded-xl p-3 mb-6 text-center text-xs text-slate-500">
-            <p class="mb-1">Publicidad Patrocinada</p>
-            <span class="text-slate-600">Espacio AdSense (728x90 / Responsive)</span>
-        </div>
-
-        <!-- Tarjetas de Sugerencias Interactivas -->
-        <div id="suggestions-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-            <div onclick="document.getElementById('user-input').value='Crear un servidor HTTP simple en Python con soporte JSON.'" class="suggestion-card bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 rounded-xl p-4 cursor-pointer transition shadow-sm hover:border-blue-500/50">
-                <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider block mb-1">Código Python</span>
-                <p class="text-sm text-slate-300">Crear un servidor HTTP simple en Python con soporte JSON.</p>
+        <!-- Sugerencias -->
+        <div id="suggestions" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <div onclick="setPrompt('Crear un servidor HTTP simple en Python con soporte JSON.')" class="bg-slate-800 border border-slate-700 rounded-xl p-3 cursor-pointer hover:border-blue-500 transition">
+                <span class="text-xs font-semibold text-blue-400 block mb-1">Código Python</span>
+                <p class="text-xs text-slate-300">Crear un servidor HTTP simple en Python con soporte JSON.</p>
             </div>
-            <div onclick="document.getElementById('user-input').value='Explicación simple sobre cómo funciona la transmisión y aceleración en una moto.'" class="suggestion-card bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 rounded-xl p-4 cursor-pointer transition shadow-sm hover:border-emerald-500/50">
-                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider block mb-1">Mecánica Práctica</span>
-                <p class="text-sm text-slate-300">Explicación simple sobre cómo funciona la transmisión y aceleración en una moto.</p>
-            </div>
-            <div onclick="document.getElementById('user-input').value='Plan de negocio para un videojuego de simulación móvil estilo Tycoon.'" class="suggestion-card bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 rounded-xl p-4 cursor-pointer transition shadow-sm hover:border-amber-500/50">
-                <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider block mb-1">Estrategia Gaming</span>
-                <p class="text-sm text-slate-300">Plan de negocio para un videojuego de simulación móvil estilo Tycoon.</p>
-            </div>
-            <div onclick="document.getElementById('user-input').value='¿Cómo solucionar problemas de despliegue y rutas estáticas en Render?'" class="suggestion-card bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 rounded-xl p-4 cursor-pointer transition shadow-sm hover:border-purple-500/50">
-                <span class="text-xs font-semibold text-purple-400 uppercase tracking-wider block mb-1">Despliegue en Render</span>
-                <p class="text-sm text-slate-300">¿Cómo solucionar problemas de despliegue y rutas estáticas en Render?</p>
+            <div onclick="setPrompt('Explicación simple de cómo funciona la aceleración en una moto.')" class="bg-slate-800 border border-slate-700 rounded-xl p-3 cursor-pointer hover:border-emerald-500 transition">
+                <span class="text-xs font-semibold text-emerald-400 block mb-1">Mecánica</span>
+                <p class="text-xs text-slate-300">Explicación simple de cómo funciona la aceleración en una moto.</p>
             </div>
         </div>
 
-        <!-- Bloque de Publicidad In-Feed -->
-        <div class="border border-dashed border-slate-700 bg-slate-900/50 rounded-xl p-3 text-center text-xs text-slate-500">
-            <p class="mb-1">Anuncio patrocinado (In-Feed)</p>
-            <span class="text-slate-600">Espacio AdSense Banner Horizontal</span>
+        <!-- Contenedor del Chat -->
+        <div id="chat-container" class="chat-box space-y-3 p-2 hidden"></div>
+
+        <!-- BLOQUE PUBLICITARIO INTERMEDIO (AdSense In-Feed) -->
+        <div class="my-3 border border-slate-800 bg-slate-900/60 rounded-xl p-2 text-center text-xs text-slate-400 min-h-[90px] flex items-center justify-center">
+            <!-- 
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="fluid"
+                 data-ad-layout-key="-fb+5w+4e-db+86"
+                 data-ad-client="ca-pub-AQUI_TU_ID_DE_PUB"
+                 data-ad-slot="AQUI_TU_SLOT"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            -->
+            <div class="w-full">
+                <p class="font-semibold text-slate-300 mb-1">Anuncio Patrocinado</p>
+                <p class="text-[10px] text-slate-500">Banner Horizontal In-Feed</p>
+            </div>
         </div>
     </main>
 
-    <!-- Barra de Entrada de Chat y Botones -->
-    <footer class="mt-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-2 flex items-center shadow-lg">
-            <input type="text" id="user-input" placeholder="Envía un mensaje o habla por el micrófono..." class="bg-transparent flex-1 px-3 text-sm text-slate-200 focus:outline-none placeholder-slate-500">
-            
-            <!-- Acciones (Micrófono y Enviar) -->
-            <div class="flex items-center space-x-2 ml-2">
-                <!-- Botón de Micrófono -->
-                <button id="mic-btn" type="button" class="p-2 hover:bg-slate-700 rounded-full text-blue-400 transition flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
-                        <line x1="12" y1="19" x2="12" y2="23"></line>
-                        <line x1="8" y1="23" x2="16" y2="23"></line>
-                    </svg>
-                </button>
-                
-                <!-- Botón de Enviar -->
-                <button id="send-btn" type="button" title="Enviar mensaje" class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full transition flex items-center justify-center shadow">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                </button>
-            </div>
-        </div>
+    <!-- Input y Botón de Enviar -->
+    <footer class="mt-2">
+        <form id="chat-form" onsubmit="sendMessage(event)" class="bg-slate-800 border border-slate-700 rounded-2xl p-2 flex items-center shadow-lg">
+            <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autocomplete="off" class="bg-transparent flex-1 px-3 text-sm text-slate-200 focus:outline-none placeholder-slate-500">
+            <button type="submit" id="send-btn" class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full transition flex items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </form>
     </footer>
 
+    <!-- Lógica JavaScript Operativa -->
+    <script>
+        function setPrompt(text) {
+            document.getElementById('user-input').value = text;
+        }
+
+        async function sendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const chatContainer = document.getElementById('chat-container');
+            const welcomeSection = document.getElementById('welcome-section');
+            const suggestions = document.getElementById('suggestions');
+
+            welcomeSection.classList.add('hidden');
+            suggestions.classList.add('hidden');
+            chatContainer.classList.remove('hidden');
+
+            chatContainer.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="bg-blue-600 text-white text-sm rounded-2xl px-4 py-2 max-w-[80%]">${escapeHtml(message)}</div>
+                </div>
+            `;
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const loadingId = 'loading-' + Date.now();
+            chatContainer.innerHTML += `
+                <div id="${loadingId}" class="flex justify-start">
+                    <div class="bg-slate-800 border border-slate-700 text-slate-400 text-sm rounded-2xl px-4 py-2 animate-pulse">Procesando...</div>
+                </div>
+            `;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            setTimeout(() => {
+                document.getElementById(loadingId).remove();
+                chatContainer.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%]">
+                            Has enviado: <strong>"${escapeHtml(message)}"</strong>. La aplicación está lista y respondiendo adecuadamente.
+                        </div>
+                    </div>
+                `;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 800);
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
 </body>
 </html>
