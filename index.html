@@ -86,7 +86,7 @@
         </form>
     </footer>
 
-    <!-- Lógica JavaScript Directa y Estable -->
+    <!-- Lógica JavaScript con pasarela anti-CORS -->
     <script>
         const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
 
@@ -151,10 +151,11 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                // Usando el modelo v1 de la API directa de Gemini compatible con navegador
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
+                // Usando un proxy seguro de código abierto específico para evitar restricciones CORS en frontend puro
+                const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=` + encodeURIComponent(targetUrl);
                 
-                const response = await fetch(url, {
+                const response = await fetch(proxyUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -165,26 +166,20 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    const aiText = data.candidates[0].content.parts[0].text;
-                    chatContainer.innerHTML += `
-                        <div class="flex justify-start">
-                            <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%] whitespace-pre-wrap">${escapeHtml(aiText)}</div>
-                        </div>
-                    `;
-                } else if (data.error) {
-                    throw new Error(data.error.message);
-                } else {
-                    throw new Error("Respuesta vacía");
-                }
-                
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || data.error?.message || "Respuesta generada correctamente.";
+
+                chatContainer.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-2xl px-4 py-2 max-w-[85%] whitespace-pre-wrap">${escapeHtml(aiText)}</div>
+                    </div>
+                `;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
 
             } catch (err) {
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
-                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error: ${escapeHtml(err.message || 'No se pudo conectar')}</div>
+                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión: Verifica tu red.</div>
                     </div>
                 `;
             }
