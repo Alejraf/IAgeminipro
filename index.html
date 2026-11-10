@@ -86,7 +86,7 @@
         </form>
     </footer>
 
-    <!-- Lógica JavaScript con CorsProxy -->
+    <!-- Lógica JavaScript Optimizada -->
     <script>
         const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
 
@@ -165,7 +165,13 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || data.error?.message || "No se pudo obtener una respuesta.";
+                // Extracción robusta de la respuesta
+                let aiText = "No se pudo obtener una respuesta.";
+                if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                    aiText = data.candidates[0].content.parts[0].text;
+                } else if (data.error) {
+                    aiText = "Error de API: " + data.error.message;
+                }
 
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
@@ -178,7 +184,7 @@
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
-                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión con la API.</div>
+                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión con el servidor.</div>
                     </div>
                 `;
             }
