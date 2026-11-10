@@ -86,7 +86,7 @@
         </form>
     </footer>
 
-    <!-- Lógica JavaScript con API de Gemini y Reconocimiento de Voz -->
+    <!-- Lógica JavaScript Corregida -->
     <script>
         const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
 
@@ -151,7 +151,8 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                // Usando un proxy público de CORS para asegurar que Render no bloquee la conexión con Google
+                const url = `https://api.allorigins.win/raw?url=` + encodeURIComponent(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`);
                 
                 const response = await fetch(url, {
                     method: "POST",
@@ -164,7 +165,7 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo obtener una respuesta.";
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || data.error?.message || "No se pudo obtener una respuesta.";
 
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
