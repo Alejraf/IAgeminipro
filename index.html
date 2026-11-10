@@ -86,7 +86,7 @@
         </form>
     </footer>
 
-    <!-- Lógica JavaScript con pasarela anti-CORS -->
+    <!-- Lógica JavaScript con CorsProxy -->
     <script>
         const API_KEY = "AIzaSyDfyhHUFMg_O5Z3cAunp6gxcg9hNJc7Dfs";
 
@@ -151,9 +151,8 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                // Usando un proxy seguro de código abierto específico para evitar restricciones CORS en frontend puro
                 const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-                const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=` + encodeURIComponent(targetUrl);
+                const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(targetUrl);
                 
                 const response = await fetch(proxyUrl, {
                     method: "POST",
@@ -166,7 +165,7 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || data.error?.message || "Respuesta generada correctamente.";
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || data.error?.message || "No se pudo obtener una respuesta.";
 
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
@@ -179,7 +178,7 @@
                 document.getElementById(loadingId).remove();
                 chatContainer.innerHTML += `
                     <div class="flex justify-start">
-                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión: Verifica tu red.</div>
+                        <div class="bg-red-900/50 border border-red-700 text-red-200 text-sm rounded-2xl px-4 py-2">Error de conexión con la API.</div>
                     </div>
                 `;
             }
