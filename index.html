@@ -122,35 +122,35 @@
             color: var(--text-muted);
         }
 
-        .textarea-wrapper {
+        .input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        textarea {
+        /* Mudado de textarea para input de uma linha com rolagem horizontal */
+        input[type="text"] {
             width: 100%;
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             color: var(--text-main);
             padding: 12px;
-            padding-right: 70px;
+            padding-right: 75px;
             font-size: 14px;
-            resize: none;
-            height: 90px;
             outline: none;
             transition: border-color 0.2s;
+            white-space: nowrap;
+            overflow-x: auto;
         }
 
-        textarea:focus {
+        input[type="text"]:focus {
             border-color: var(--accent-color);
         }
 
         .input-actions-absolute {
             position: absolute;
             right: 8px;
-            bottom: 12px;
             display: flex;
             gap: 4px;
         }
@@ -377,8 +377,8 @@
 
             <div class="input-group">
                 <label for="urlInput">Cole a URL de Vídeo ou Áudio:</label>
-                <div class="textarea-wrapper">
-                    <textarea id="urlInput" placeholder="https://exemplo.com/video.mp4 ou colchetes [https://...]"></textarea>
+                <div class="input-wrapper">
+                    <input type="text" id="urlInput" placeholder="https://exemplo.com/video.mp4">
                     <div class="input-actions-absolute">
                         <button class="btn-mini" id="btnPaste">Colar</button>
                         <button class="btn-mini" id="btnClear">✕</button>
@@ -495,7 +495,7 @@
         btnPaste.onclick = async () => {
             try {
                 const text = await navigator.clipboard.readText();
-                urlInput.value = text;
+                urlInput.value = text.trim();
             } catch (err) {
                 showToast('Erro ao colar da área de transferência');
             }
@@ -515,12 +515,10 @@
         };
 
         function cleanUrl(raw) {
-            let cleaned = raw.trim();
-            // Remove colchetes extras se houverem
+            let cleaned = raw.replace(/[\r\n]+/g, "").trim();
             if (cleaned.startsWith('[') && cleaned.endsWith(']')) {
                 cleaned = cleaned.slice(1, -1);
             }
-            // Extrair URL caso venha colada junto com texto
             const match = cleaned.match(/https?:\/\/[^\s]+/);
             if (match) {
                 cleaned = match[0];
@@ -537,7 +535,6 @@
             resultBox.classList.add('active');
             saveToHistory(finalUrl);
 
-            // Configurar player de mídia com base na extensão
             videoPlayer.pause();
             audioPlayer.pause();
             videoPlayer.src = '';
@@ -565,7 +562,6 @@
             showToast('Link copiado para a área de transferência!');
         };
 
-        // Inicializar histórico ao carregar
         renderHistory();
     </script>
 </body>
