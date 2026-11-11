@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utilitário de Mídia Web</title>
-    <!-- Nuevo Script de Anuncio Monetag -->
+    <!-- Script de Monetag (Banner estándar limpio) -->
     <script>(function(s){s.dataset.zone='12234318',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <style>
         :root {
@@ -43,12 +43,11 @@
             gap: 16px;
         }
 
-        /* Bloco de Anúncios Discreto */
         .ad-container {
             background-color: var(--card-bg);
             border: 1px dashed var(--border-color);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             font-size: 12px;
             color: var(--text-muted);
@@ -68,13 +67,12 @@
             text-transform: uppercase;
         }
 
-        /* Cartão Principal */
         .main-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -111,7 +109,6 @@
             line-height: 1.4;
         }
 
-        /* Grupo de Input */
         .input-group {
             display: flex;
             flex-direction: column;
@@ -141,8 +138,6 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
-            white-space: nowrap;
-            overflow-x: auto;
         }
 
         input[type="text"]:focus {
@@ -171,7 +166,6 @@
             background-color: #475569;
         }
 
-        /* Testes Rápidos */
         .quick-tests {
             display: flex;
             gap: 6px;
@@ -204,7 +198,6 @@
             color: var(--text-main);
         }
 
-        /* Botão Principal */
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
             color: white;
@@ -219,14 +212,12 @@
             justify-content: center;
             gap: 8px;
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            transition: opacity 0.2s, transform 0.1s;
         }
 
         .btn-primary:active {
             transform: scale(0.98);
         }
 
-        /* Resultados e Player */
         .result-box {
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
@@ -274,7 +265,6 @@
             display: block;
         }
 
-        /* Histórico */
         .history-section {
             display: flex;
             flex-direction: column;
@@ -338,7 +328,6 @@
             padding: 8px;
         }
 
-        /* Toast de Cópia */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -361,19 +350,17 @@
 <body>
 
     <div class="container">
-        <!-- Anúncio Superior -->
+        <!-- Anúncio Superior Discreto -->
         <div class="ad-container">
             <span class="ad-badge">Ad</span>
             <span>Espaço Publicitário</span>
-            <small style="font-size: 10px; opacity: 0.7;">Monetag Integrado</small>
         </div>
 
-        <!-- Cartão Principal da Ferramenta -->
         <div class="main-card">
             <div class="header">
                 <div class="icon-box">✨</div>
                 <h1>Utilitário de Mídia Web</h1>
-                <p class="subtitle">Cole o link público para processar, validar e gerar recursos limpos e prontos para uso instantaneamente.</p>
+                <p class="subtitle">Cole o link público para processar, validar e reproduzir instantaneamente.</p>
             </div>
 
             <div class="input-group">
@@ -387,39 +374,34 @@
                 </div>
             </div>
 
-            <!-- Botões de Teste Rápido -->
+            <!-- Testes Rápidos -->
             <div class="quick-tests">
-                <span class="chip" onclick="setTestUrl('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">BigBuckBunny (MP4)</span>
-                <span class="chip" onclick="setTestUrl('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">Áudio MP3</span>
-                <span class="chip" onclick="setTestUrl('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')">Stream HLS</span>
+                <span class="chip" onclick="setTestUrl('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">BigBuckBunny</span>
+                <span class="chip" onclick="setTestUrl('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4')">Sintel</span>
+                <span class="chip" onclick="setTestUrl('https://archive.org/download/BigBuckBunny_328/BigBuckBunny_512kb.mp4')">Archive.org</span>
             </div>
 
-            <!-- Botão de Ação -->
             <button class="btn-primary" id="btnProcess">
                 ⚡ Processar Link
             </button>
 
-            <!-- Caixa de Resultado Dinâmica -->
             <div class="result-box" id="resultBox">
                 <div class="result-header">
-                    <span id="resultStatus">✓ Link limpo e otimizado com sucesso!</span>
+                    <span id="resultStatus">✓ Link limpo com sucesso!</span>
                     <button class="btn-mini" id="btnCopy">Copiar Link</button>
                 </div>
                 <div class="link-output" id="cleanLinkOutput"></div>
 
-                <!-- Reproductor Multimedia Integrado -->
                 <div class="media-container" id="mediaContainer">
                     <video id="videoPlayer" controls preload="metadata" style="display:none;"></video>
                     <audio id="audioPlayer" controls preload="metadata" style="display:none; width:100%;"></audio>
                 </div>
 
-                <!-- Botón de Video Flotante (PiP) -->
                 <button class="btn-mini" id="btnPiP" style="width: 100%; padding: 10px; display: none; background-color: var(--accent-color); font-weight: 600;">
                     📺 Reproduzir em Vídeo Flotante (PiP)
                 </button>
             </div>
 
-            <!-- Histórico Recente -->
             <div class="history-section">
                 <div class="history-header">
                     <span>🕒 HISTÓRICO RECENTE</span>
@@ -431,14 +413,12 @@
             </div>
         </div>
 
-        <!-- Anúncio Inferior -->
         <div class="ad-container">
             <span class="ad-badge">Ad</span>
-            <small>Monetag - Zona Ativa</small>
+            <small>Monetag Ativo</small>
         </div>
     </div>
 
-    <!-- Toast de Notificação -->
     <div class="toast" id="toast">Copiado para o portapapeles!</div>
 
     <script>
@@ -489,9 +469,7 @@
         function showToast(message = 'Copiado com sucesso!') {
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
+            setTimeout(() => { toast.classList.remove('show'); }, 2000);
         }
 
         function setTestUrl(url) {
@@ -504,7 +482,7 @@
                 const text = await navigator.clipboard.readText();
                 urlInput.value = text.trim();
             } catch (err) {
-                showToast('Erro ao colar da área de transferência');
+                showToast('Erro ao colar');
             }
         };
 
@@ -522,16 +500,18 @@
             renderHistory();
         };
 
+        // Extractor ultra robusto para limpiar URLs con Markdown o corchetes
         function cleanUrl(raw) {
-            let cleaned = raw.replace(/[\r\n]+/g, "").trim();
-            if (cleaned.startsWith('[') && cleaned.endsWith(']')) {
-                cleaned = cleaned.slice(1, -1);
+            let cleaned = raw.trim();
+            // Si viene con formato markdown [url](url), extrae el enlace real del paréntesis o corchete
+            const mdMatch = cleaned.match(/\((https?:\/\/[^\)]+)\)/) || cleaned.match(/\[(https?:\/\/[^\]]+)\]/);
+            if (mdMatch) {
+                cleaned = mdMatch[1];
+            } else {
+                const match = cleaned.match(/https?:\/\/[^\s]+/);
+                if (match) cleaned = match[0];
             }
-            const match = cleaned.match(/https?:\/\/[^\s]+/);
-            if (match) {
-                cleaned = match[0];
-            }
-            return cleaned;
+            return cleaned.replace(/[\r\n]+/g, "").trim();
         }
 
         function processLink() {
@@ -552,19 +532,17 @@
             mediaContainer.style.display = 'none';
             btnPiP.style.display = 'none';
 
-            if (finalUrl.match(/\.(mp4|webm|ogg|m3u8)$/i) || finalUrl.includes('googlevideo.com') || finalUrl.includes('comondatastorage.googleapis.com')) {
-                mediaContainer.style.display = 'block';
-                if (finalUrl.match(/\.(mp3|wav|ogg)$/i)) {
-                    audioPlayer.src = finalUrl;
-                    audioPlayer.style.display = 'block';
-                    audioPlayer.load();
-                } else {
-                    videoPlayer.src = finalUrl;
-                    videoPlayer.style.display = 'block';
-                    videoPlayer.load();
-                    if (document.pictureInPictureEnabled) {
-                        btnPiP.style.display = 'block';
-                    }
+            mediaContainer.style.display = 'block';
+            if (finalUrl.match(/\.(mp3|wav|ogg)$/i)) {
+                audioPlayer.src = finalUrl;
+                audioPlayer.style.display = 'block';
+                audioPlayer.load();
+            } else {
+                videoPlayer.src = finalUrl;
+                videoPlayer.style.display = 'block';
+                videoPlayer.load();
+                if (document.pictureInPictureEnabled) {
+                    btnPiP.style.display = 'block';
                 }
             }
         }
@@ -579,7 +557,7 @@
                     showToast('Reproduza o vídeo primeiro!');
                 }
             } catch (err) {
-                showToast('Erro ao ativar o vídeo flotante');
+                showToast('Erro ao ativar vídeo flotante');
             }
         };
 
@@ -587,7 +565,7 @@
 
         btnCopy.onclick = () => {
             navigator.clipboard.writeText(cleanLinkOutput.textContent);
-            showToast('Link copiado para a área de transferência!');
+            showToast('Link copiado!');
         };
 
         renderHistory();
