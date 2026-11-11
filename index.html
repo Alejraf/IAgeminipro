@@ -128,7 +128,6 @@
             align-items: center;
         }
 
-        /* Mudado de textarea para input de uma linha com rolagem horizontal */
         input[type="text"] {
             width: 100%;
             background-color: var(--bg-color);
@@ -408,8 +407,8 @@
 
                 <!-- Reproductor Multimedia Integrado -->
                 <div class="media-container" id="mediaContainer">
-                    <video id="videoPlayer" controls style="display:none;"></video>
-                    <audio id="audioPlayer" controls style="display:none; width:100%;"></audio>
+                    <video id="videoPlayer" controls preload="metadata" style="display:none;"></video>
+                    <audio id="audioPlayer" controls preload="metadata" style="display:none; width:100%;"></audio>
                 </div>
             </div>
 
@@ -548,9 +547,11 @@
                 if (finalUrl.match(/\.(mp3|wav|ogg)$/i)) {
                     audioPlayer.src = finalUrl;
                     audioPlayer.style.display = 'block';
+                    audioPlayer.load();
                 } else {
                     videoPlayer.src = finalUrl;
                     videoPlayer.style.display = 'block';
+                    videoPlayer.load();
                 }
             }
         }
