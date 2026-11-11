@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utilitário de Mídia Web</title>
+    <!-- Script de Anúncio Monetag -->
+    <script>(function(s){s.dataset.zone='12236304',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -41,7 +43,7 @@
             gap: 16px;
         }
 
-        /* Bloco de Anúncios */
+        /* Bloco de Anúncios Estático */
         .ad-container {
             background-color: var(--card-bg);
             border: 1px dashed var(--border-color);
@@ -362,8 +364,8 @@
         <!-- Anúncio Superior -->
         <div class="ad-container">
             <span class="ad-badge">Ad</span>
-            <span>Oportunidades de Dados & Promoções</span>
-            <small style="font-size: 10px; opacity: 0.7;">Espaço Reservado para Anúncio Principal</small>
+            <span>Espaço Publicitário</span>
+            <small style="font-size: 10px; opacity: 0.7;">Monetag Ativo</small>
         </div>
 
         <!-- Cartão Principal da Ferramenta -->
@@ -405,11 +407,16 @@
                 </div>
                 <div class="link-output" id="cleanLinkOutput"></div>
 
-                <!-- Reproductor Multimedia Integrado -->
+                <!-- Reproductor Multimedia Integrado con PiP nativo -->
                 <div class="media-container" id="mediaContainer">
                     <video id="videoPlayer" controls preload="metadata" style="display:none;"></video>
                     <audio id="audioPlayer" controls preload="metadata" style="display:none; width:100%;"></audio>
                 </div>
+
+                <!-- Botón de Video Flotante (PiP) -->
+                <button class="btn-mini" id="btnPiP" style="width: 100%; padding: 10px; display: none; background-color: var(--accent-color); font-weight: 600;">
+                    📺 Reproduzir em Vídeo Flotante (PiP)
+                </button>
             </div>
 
             <!-- Histórico Recente -->
@@ -427,7 +434,7 @@
         <!-- Anúncio Inferior -->
         <div class="ad-container">
             <span class="ad-badge">Ad</span>
-            <small>Espaço Publicitário - Monetag / AdMob</small>
+            <small>Monetag - Vignette Ativo</small>
         </div>
     </div>
 
@@ -445,6 +452,7 @@
         const mediaContainer = document.getElementById('mediaContainer');
         const videoPlayer = document.getElementById('videoPlayer');
         const audioPlayer = document.getElementById('audioPlayer');
+        const btnPiP = document.getElementById('btnPiP');
         const historyList = document.getElementById('historyList');
         const btnClearHistory = document.getElementById('btnClearHistory');
         const toast = document.getElementById('toast');
@@ -503,6 +511,7 @@
         btnClear.onclick = () => {
             urlInput.value = '';
             resultBox.classList.remove('active');
+            btnPiP.style.display = 'none';
             videoPlayer.pause();
             audioPlayer.pause();
         };
@@ -541,6 +550,7 @@
             videoPlayer.style.display = 'none';
             audioPlayer.style.display = 'none';
             mediaContainer.style.display = 'none';
+            btnPiP.style.display = 'none';
 
             if (finalUrl.match(/\.(mp4|webm|ogg|m3u8)$/i) || finalUrl.includes('googlevideo.com') || finalUrl.includes('comondatastorage.googleapis.com')) {
                 mediaContainer.style.display = 'block';
@@ -552,9 +562,26 @@
                     videoPlayer.src = finalUrl;
                     videoPlayer.style.display = 'block';
                     videoPlayer.load();
+                    if (document.pictureInPictureEnabled) {
+                        btnPiP.style.display = 'block';
+                    }
                 }
             }
         }
+
+        btnPiP.onclick = async () => {
+            try {
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                } else if (videoPlayer.readyState >= 1) {
+                    await videoPlayer.requestPictureInPicture();
+                } else {
+                    showToast('Reproduza o vídeo primeiro!');
+                }
+            } catch (err) {
+                showToast('Erro ao ativar o vídeo flotante');
+            }
+        };
 
         btnProcess.onclick = processLink;
 
