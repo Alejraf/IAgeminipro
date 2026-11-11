@@ -514,7 +514,7 @@
             return cleaned.replace(/[\r\n]+/g, "").trim();
         }
 
-        function processLink() {
+                function processLink() {
             const rawVal = urlInput.value;
             if (!rawVal.trim()) return;
 
@@ -525,14 +525,15 @@
 
             videoPlayer.pause();
             audioPlayer.pause();
-            videoPlayer.src = '';
-            audioPlayer.src = '';
+            videoPlayer.removeAttribute('src');
+            audioPlayer.removeAttribute('src');
             videoPlayer.style.display = 'none';
             audioPlayer.style.display = 'none';
             mediaContainer.style.display = 'none';
             btnPiP.style.display = 'none';
 
             mediaContainer.style.display = 'block';
+
             if (finalUrl.match(/\.(mp3|wav|ogg)$/i)) {
                 audioPlayer.src = finalUrl;
                 audioPlayer.style.display = 'block';
@@ -541,12 +542,13 @@
                 videoPlayer.src = finalUrl;
                 videoPlayer.style.display = 'block';
                 videoPlayer.load();
+
                 if (document.pictureInPictureEnabled) {
                     btnPiP.style.display = 'block';
                 }
             }
-        }
-
+                }
+        
         btnPiP.onclick = async () => {
             try {
                 if (document.pictureInPictureElement) {
