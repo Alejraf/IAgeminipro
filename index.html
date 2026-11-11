@@ -1,158 +1,380 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta name="google-site-verification" content="FMbfIUq0ZEGZ6qSZGXxqUF3MNE2hDnd3UgJr28CIwyo" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utilitário de Links & Mídia Rápida</title>
-    <meta name="monetag" content="f63bb788de86359b5461966e9948b11f">
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            width: 100%;
-            margin: 40px auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            text-align: center;
-            color: var(--text-main);
-        }
-        p.subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input[type="text"]:focus {
-            border-color: var(--accent);
-        }
-        button {
-            background: var(--accent);
-            color: #0f172a;
-            font-weight: bold;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        #resultArea {
-            margin-top: 20px;
-            padding: 15px;
-            background: #0f172a;
-            border-radius: 8px;
-            display: none;
-            word-break: break-all;
-            font-size: 0.9rem;
-            border-left: 4px solid var(--accent);
-        }
-        /* Espacio reservado para los anuncios de Monetag */
-        .ad-container {
-            margin: 20px 0;
-            text-align: center;
-            min-height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-        }
-        footer {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            padding: 10px;
-        }
-    </style>
-
-    <!-- PEGA AQUÍ TU SCRIPT DE MONETAG CUANDO TE LO PROPORCIONEN -->
-    <!-- Ejemplo: <script src="https://alwingulla.com/tag.min.js" data-zone="TU_ZONA" async></script> -->
-</head>
-<body>
-
-    <div class="container">
-        <h1>Utilitário de Mídia Web</h1>
-        <p class="subtitle">Cole o link público para processar e gerar recursos limpos instantaneamente.</p>
-        
-        <div class="input-group">
-            <input type="text" id="urlInput" placeholder="Cole seu link aqui (ex: https://...)">
-            <button onclick="processLink()">Processar Link</button>
-        </div>
-
-        <div id="resultArea"></div>
-
-        <!-- Espacio publicitario integrado -->
-        <div class="ad-container" id="adSlot">
-            <span style="color: var(--text-muted); font-size: 0.75rem;">Espaço publicitário</span>
-        </div>
-    </div>
-
-    <footer>
-        &copy; 2026 Utilitários Web. Todos os direitos reservados.
-    </footer>
-
+    <title>Utilitário de Mídia Web</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <script>
-        function processLink() {
-            const url = document.getElementById('urlInput').value.trim();
-            const resultArea = document.getElementById('resultArea');
-
-            if (!url) {
-                alert('Por favor, insira um link válido.');
-                return;
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        borderbg: '#334155'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
             }
-
-            // Simulación de procesamiento rápido y eficiente en el cliente
-            resultArea.style.display = 'block';
-            resultArea.innerHTML = `<strong>Processando:</strong> ${url}<br><br><span style="color: #38bdf8;">✓ Link limpo e otimizado com sucesso! Pronto para uso.</span>`;
         }
     </script>
-</body>
-<script>(function(s){s.dataset.zone='12234318',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-</html>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center p-3 sm:p-6 antialiased">
+
+    <!-- Top Banner Placeholder (AdMob / Monetag slot) -->
+    <div class="w-full max-w-xl mb-4 bg-slate-800/80 border border-dashed border-slate-600 rounded-xl p-3 text-center text-xs text-slate-400 flex flex-col items-center justify-center min-h-[60px] shadow-sm">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="bg-amber-500/20 text-amber-400 text-[10px] font-semibold px-1.5 py-0.5 rounded border border-amber-500/30">AD</span>
+            <span class="text-slate-300 font-medium">Oportunidades de Dados & Promoções</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Espaço Reservado para Anúncio Principal</p>
+    </div>
+
+    <!-- Main Application Container -->
+    <main class="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-6">
+        
+        <!-- Header Section -->
+        <header class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center p-3 bg-sky-500/10 text-sky-400 rounded-2xl mb-1 ring-1 ring-sky-500/20">
+                <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Utilitário de Mídia Web</h1>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Cole o link público para processar, validar e gerar recursos limpos e prontos para uso instantaneamente.
+            </p>
+        </header>
+
+        <!-- Input Form Section -->
+        <section class="space-y-4">
+            <div class="relative">
+                <label for="media-url" class="block text-xs font-medium text-slate-300 mb-1.5">Cole a URL de Vídeo ou Áudio:</label>
+                <textarea 
+                    id="media-url" 
+                    rows="3"
+                    class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all resize-none shadow-inner"
+                    placeholder="https://exemplo.com/video.mp4 ou colchetes [https://...]"
+                ></textarea>
+                
+                <!-- Quick Clear / Paste buttons -->
+                <div class="absolute right-2 bottom-3 flex gap-2">
+                    <button id="btn-paste" title="Colar da área de transferência" class="text-slate-400 hover:text-sky-400 text-xs px-2 py-1 rounded bg-slate-700/60 hover:bg-slate-700 transition">
+                        <i class="fa-regular fa-clipboard"></i> Colar
+                    </button>
+                    <button id="btn-clear" title="Limpar campo" class="text-slate-400 hover:text-rose-400 text-xs px-2 py-1 rounded bg-slate-700/60 hover:bg-slate-700 transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Samples Selector for Easy Testing -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
+                <span class="text-slate-400 whitespace-nowrap text-[11px]"><i class="fa-solid fa-vial"></i> Testes rápidos:</span>
+                <button class="sample-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap transition" data-url="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">BigBuckBunny (MP4)</button>
+                <button class="sample-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap transition" data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">Áudio MP3</button>
+                <button class="sample-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap transition" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Stream HLS (.m3u8)</button>
+            </div>
+
+            <!-- Primary Action Button -->
+            <button 
+                id="btn-process"
+                class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 active:scale-[0.99] text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 transition-all duration-200"
+            >
+                <i class="fa-solid fa-bolt"></i>
+                <span id="btn-text">Processar Link</span>
+            </button>
+        </section>
+
+        <!-- Dynamic Output & Processing Box -->
+        <section id="output-section" class="hidden space-y-4">
+            
+            <div class="bg-slate-800/90 border border-sky-500/30 rounded-xl p-4 space-y-4 relative overflow-hidden">
+                <div class="h-1 w-full bg-slate-700 absolute top-0 left-0">
+                    <div id="progress-bar" class="h-full bg-sky-500 w-0 transition-all duration-300"></div>
+                </div>
+
+                <!-- Status Header -->
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> Link limpo e otimizado com sucesso!
+                    </span>
+                    <span id="badge-protocol" class="text-[10px] bg-slate-700 text-slate-300 font-mono px-2 py-0.5 rounded-full border border-slate-600 uppercase">HTTPS</span>
+                </div>
+
+                <!-- Sanitized Link Output -->
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1">URL Processada & Limpa:</label>
+                    <div class="flex gap-2">
+                        <input 
+                            id="clean-url-output" 
+                            type="text" 
+                            readonly 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-sky-300 font-mono focus:outline-none select-all"
+                        />
+                        <button 
+                            id="btn-copy" 
+                            class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition shrink-0"
+                            title="Copiar para área de transferência"
+                        >
+                            <i class="fa-regular fa-copy"></i>
+                            <span id="copy-btn-text">Copiar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Metadata Badges -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
+                        <p class="text-[10px] text-slate-400">Tipo / Formato</p>
+                        <p id="meta-type" class="text-xs font-bold text-slate-200 mt-0.5">Detectando...</p>
+                    </div>
+                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
+                        <p class="text-[10px] text-slate-400">Extensão</p>
+                        <p id="meta-ext" class="text-xs font-bold text-slate-200 mt-0.5">.mp4</p>
+                    </div>
+                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
+                        <p class="text-[10px] text-slate-400">Dimensão / Duração</p>
+                        <p id="meta-extra" class="text-xs font-bold text-slate-200 mt-0.5">--</p>
+                    </div>
+                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
+                        <p class="text-[10px] text-slate-400">Status da Fonte</p>
+                        <p id="meta-status" class="text-xs font-bold text-emerald-400 mt-0.5">Pronto para uso</p>
+                    </div>
+                </div>
+
+                <!-- Embedded Live Media Player Preview -->
+                <div class="pt-2 border-t border-slate-700/60">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-play text-sky-400"></i> Pré-visualização ao vivo
+                        </span>
+                        <span class="text-[10px] text-slate-500">HTML5 Player</span>
+                    </div>
+
+                    <!-- Video Container -->
+                    <div id="video-preview-container" class="hidden rounded-xl overflow-hidden bg-black border border-slate-700 shadow-md">
+                        <video id="video-player" controls class="w-full max-h-64 object-contain">
+                            Seu navegador não suporta a tag de vídeo.
+                        </video>
+                    </div>
+
+                    <!-- Audio Container -->
+                    <div id="audio-preview-container" class="hidden rounded-xl bg-slate-900 p-3 border border-slate-700">
+                        <audio id="audio-player" controls class="w-full">
+                            Seu navegador não suporta o elemento de áudio.
+                        </audio>
+                    </div>
+
+                    <!-- Generic Link Warning for External Platforms -->
+                    <div id="external-preview-container" class="hidden rounded-xl bg-slate-900/80 p-4 border border-slate-700 text-center space-y-2">
+                        <i class="fa-solid fa-external-link text-slate-400 text-xl"></i>
+                        <p class="text-xs text-slate-300">Este link pertence a um protocolo ou plataforma externa.</p>
+                        <a id="external-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-sky-400 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                            Abrir Link Direto <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Local History Section -->
+        <section class="space-y-3 pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Histórico Recente
+                </h2>
+                <button id="btn-clear-history" class="text-[11px] text-slate-500 hover:text-rose-400 transition flex items-center gap-1">
+                    <i class="fa-regular fa-trash-can"></i> Limpar
+                </button>
+            </div>
+
+            <!-- History List Container -->
+            <div id="history-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <!-- Dynamically populated or empty state -->
+                <p id="history-empty" class="text-xs text-slate-600 text-center py-4 italic">Nenhum link processado recentemente.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Banner / Ad Space Placeholder -->
+    <footer class="w-full max-w-xl mt-4 bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 text-center text-xs text-slate-500 shadow-sm flex flex-col items-center justify-center min-h-[50px]">
+        <p class="font-medium text-slate-400">Espaço publicitário</p>
+        <p class="text-[10px] text-slate-600 mt-0.5">Monetização & Widgets de Terceiros</p>
+    </footer>
+
+    <!-- Toast Notification Message -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 border border-sky-500 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 z-50">
+        <i id="toast-icon" class="fa-solid fa-info-circle text-sky-400"></i>
+        <span id="toast-msg">Mensagem</span>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element References
+            const urlInput = document.getElementById('media-url');
+            const btnProcess = document.getElementById('btn-process');
+            const btnText = document.getElementById('btn-text');
+            const btnPaste = document.getElementById('btn-paste');
+            const btnClear = document.getElementById('btn-clear');
+            
+            const outputSection = document.getElementById('output-section');
+            const cleanUrlOutput = document.getElementById('clean-url-output');
+            const btnCopy = document.getElementById('btn-copy');
+            const copyBtnText = document.getElementById('copy-btn-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            const metaType = document.getElementById('meta-type');
+            const metaExt = document.getElementById('meta-ext');
+            const metaExtra = document.getElementById('meta-extra');
+            const metaStatus = document.getElementById('meta-status');
+            const badgeProtocol = document.getElementById('badge-protocol');
+            
+            const videoPreviewContainer = document.getElementById('video-preview-container');
+            const videoPlayer = document.getElementById('video-player');
+            const audioPreviewContainer = document.getElementById('audio-preview-container');
+            const audioPlayer = document.getElementById('audio-player');
+            const externalPreviewContainer = document.getElementById('external-preview-container');
+            const externalLinkBtn = document.getElementById('external-link-btn');
+
+            const historyList = document.getElementById('history-list');
+            const historyEmpty = document.getElementById('history-empty');
+            const btnClearHistory = document.getElementById('btn-clear-history');
+
+            // Quick Samples
+            document.querySelectorAll('.sample-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    urlInput.value = btn.getAttribute('data-url');
+                    processLink();
+                });
+            });
+
+            // Paste Button
+            btnPaste.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    urlInput.value = text;
+                    showToast('Texto colado da área de transferência!', 'success');
+                } catch (err) {
+                    showToast('Por favor, cole manualmente no campo.', 'info');
+                }
+            });
+
+            // Clear Input Button
+            btnClear.addEventListener('click', () => {
+                urlInput.value = '';
+                outputSection.classList.add('hidden');
+                resetPlayers();
+            });
+
+            // Process Button Click
+            btnProcess.addEventListener('click', processLink);
+
+            // Clean & Sanitize URL Logic
+            function sanitizeUrl(rawText) {
+                if (!rawText) return '';
+                let text = rawText.trim();
+                
+                // Remove Markdown or bracket wrappers e.g. [http...](http...)
+                const markdownMatch = text.match(/\[.*?\]\((https?:\/\/[^\s]+)\)/);
+                if (markdownMatch && markdownMatch[1]) {
+                    text = markdownMatch[1];
+                } else {
+                    // Extract first valid http/https match if text has extra garbage
+                    const urlMatch = text.match(/(https?:\/\/[^\s\]\)\>"]+)/);
+                    if (urlMatch && urlMatch[0]) {
+                        text = urlMatch[0];
+                    }
+                }
+
+                // Remove trailing bracket characters if present
+                text = text.replace(/[\]\)\>]+$/, '');
+
+                return text;
+            }
+
+            function processLink() {
+                const rawUrl = urlInput.value;
+                const cleanUrl = sanitizeUrl(rawUrl);
+
+                if (!cleanUrl) {
+                    showToast('Por favor, insira uma URL válida para processar.', 'error');
+                    return;
+                }
+
+                // Show loading status
+                btnProcess.disabled = true;
+                btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
+                outputSection.classList.remove('hidden');
+                progressBar.style.width = '30%';
+
+                setTimeout(() => {
+                    progressBar.style.width = '70%';
+                    
+                    // Update Output Field
+                    cleanUrlOutput.value = cleanUrl;
+                    
+                    // Protocol badge
+                    try {
+                        const parsedUrl = new URL(cleanUrl);
+                        badgeProtocol.textContent = parsedUrl.protocol.replace(':', '').toUpperCase();
+                    } catch (e) {
+                        badgeProtocol.textContent = 'HTTP';
+                    }
+
+                    // Reset Preview Elements
+                    resetPlayers();
+
+                    // Detect Media Type & Format
+                    const lowerUrl = cleanUrl.toLowerCase();
+                    let detectedType = 'Desconhecido';
+                    let detectedExt = 'LINK';
+                    let extraInfo = 'Mídia Web';
+
+                    if (lowerUrl.includes('.mp4') || lowerUrl.includes('video')) {
+                        detectedType = 'Vídeo MP4';
+                        detectedExt = '.mp4';
+            
