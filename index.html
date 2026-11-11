@@ -501,20 +501,25 @@
         };
 
         // Extractor ultra robusto para limpiar URLs con Markdown o corchetes
-        function cleanUrl(raw) {
+        
+
+                                function cleanUrl(raw) {
             let cleaned = raw.trim();
-            // Si viene con formato markdown [url](url), extrae el enlace real del paréntesis o corchete
             const mdMatch = cleaned.match(/\((https?:\/\/[^\)]+)\)/) || cleaned.match(/\[(https?:\/\/[^\]]+)\]/);
             if (mdMatch) {
                 cleaned = mdMatch[1];
             } else {
                 const match = cleaned.match(/https?:\/\/[^\s]+/);
-                if (match) cleaned = match[0];
+                if (match) {
+                    cleaned = match[0];
+                } else if (cleaned.startsWith('www.') || cleaned.includes('.com') || cleaned.includes('.org')) {
+                    cleaned = 'https://' + cleaned;
+                }
             }
             return cleaned.replace(/[\r\n]+/g, "").trim();
         }
 
-                        function processLink() {
+        function processLink() {
             const rawVal = urlInput.value;
             if (!rawVal.trim()) return;
 
@@ -543,15 +548,17 @@
                 videoPlayer.style.display = 'block';
                 videoPlayer.load();
 
-                // Capturar si el video da error de formato para que no quede en gris roto
                 videoPlayer.onerror = function() {
-                    showToast('Erro: Formato incompatível ou bloqueado pelo servidor!');
+                    showToast('Erro: Formato incompatível ou bloqueado!');
                     videoPlayer.style.display = 'none';
                 };
 
                 if (document.pictureInPictureEnabled) {
                     btnPiP.style.display = 'block';
                 }
+            }
+        }
+        
             }
                         }
         
