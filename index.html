@@ -1,380 +1,572 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utilitário de Mídia Web</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            900: '#0c4a6e',
-                        },
-                        darkbg: '#0f172a',
-                        cardbg: '#1e293b',
-                        borderbg: '#334155'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
         }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
+
+        /* Bloco de Anúncios */
+        .ad-container {
+            background-color: var(--card-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 9999px;
+
+        .ad-badge {
+            background-color: #fbbf24;
+            color: #000;
+            font-weight: bold;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+
+        /* Cartão Principal */
+        .main-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-box {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-color);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        p.subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Grupo de Input */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .textarea-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        textarea {
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-main);
+            padding: 12px;
+            padding-right: 70px;
+            font-size: 14px;
+            resize: none;
+            height: 90px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        .input-actions-absolute {
+            position: absolute;
+            right: 8px;
+            bottom: 12px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-mini {
+            background-color: var(--border-color);
+            color: var(--text-main);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-mini:hover {
+            background-color: #475569;
+        }
+
+        /* Testes Rápidos */
+        .quick-tests {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .quick-tests::-webkit-scrollbar {
+            height: 4px;
+        }
+        .quick-tests::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+
+        .chip {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            border-color: var(--accent-color);
+            color: var(--text-main);
+        }
+
+        /* Botão Principal */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Resultados e Player */
+        .result-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .result-box.active {
+            display: flex;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .link-output {
+            background: rgba(0,0,0,0.2);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            color: var(--text-muted);
+        }
+
+        .media-container {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            display: none;
+        }
+
+        video, audio {
+            width: 100%;
+            max-height: 220px;
+            display: block;
+        }
+
+        /* Histórico */
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .clear-history {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .clear-history:hover {
+            color: #ef4444;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 140px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background-color: var(--bg-color);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .history-item:hover {
+            border-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .empty-history {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+            padding: 8px;
+        }
+
+        /* Toast de Cópia */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .toast.show {
+            opacity: 1;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between items-center p-3 sm:p-6 antialiased">
+<body>
 
-    <!-- Top Banner Placeholder (AdMob / Monetag slot) -->
-    <div class="w-full max-w-xl mb-4 bg-slate-800/80 border border-dashed border-slate-600 rounded-xl p-3 text-center text-xs text-slate-400 flex flex-col items-center justify-center min-h-[60px] shadow-sm">
-        <div class="flex items-center gap-2 mb-1">
-            <span class="bg-amber-500/20 text-amber-400 text-[10px] font-semibold px-1.5 py-0.5 rounded border border-amber-500/30">AD</span>
-            <span class="text-slate-300 font-medium">Oportunidades de Dados & Promoções</span>
+    <div class="container">
+        <!-- Anúncio Superior -->
+        <div class="ad-container">
+            <span class="ad-badge">Ad</span>
+            <span>Oportunidades de Dados & Promoções</span>
+            <small style="font-size: 10px; opacity: 0.7;">Espaço Reservado para Anúncio Principal</small>
         </div>
-        <p class="text-[11px] text-slate-400">Espaço Reservado para Anúncio Principal</p>
-    </div>
 
-    <!-- Main Application Container -->
-    <main class="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-6">
-        
-        <!-- Header Section -->
-        <header class="text-center space-y-2">
-            <div class="inline-flex items-center justify-center p-3 bg-sky-500/10 text-sky-400 rounded-2xl mb-1 ring-1 ring-sky-500/20">
-                <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+        <!-- Cartão Principal da Ferramenta -->
+        <div class="main-card">
+            <div class="header">
+                <div class="icon-box">✨</div>
+                <h1>Utilitário de Mídia Web</h1>
+                <p class="subtitle">Cole o link público para processar, validar e gerar recursos limpos e prontos para uso instantaneamente.</p>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Utilitário de Mídia Web</h1>
-            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Cole o link público para processar, validar e gerar recursos limpos e prontos para uso instantaneamente.
-            </p>
-        </header>
 
-        <!-- Input Form Section -->
-        <section class="space-y-4">
-            <div class="relative">
-                <label for="media-url" class="block text-xs font-medium text-slate-300 mb-1.5">Cole a URL de Vídeo ou Áudio:</label>
-                <textarea 
-                    id="media-url" 
-                    rows="3"
-                    class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all resize-none shadow-inner"
-                    placeholder="https://exemplo.com/video.mp4 ou colchetes [https://...]"
-                ></textarea>
-                
-                <!-- Quick Clear / Paste buttons -->
-                <div class="absolute right-2 bottom-3 flex gap-2">
-                    <button id="btn-paste" title="Colar da área de transferência" class="text-slate-400 hover:text-sky-400 text-xs px-2 py-1 rounded bg-slate-700/60 hover:bg-slate-700 transition">
-                        <i class="fa-regular fa-clipboard"></i> Colar
-                    </button>
-                    <button id="btn-clear" title="Limpar campo" class="text-slate-400 hover:text-rose-400 text-xs px-2 py-1 rounded bg-slate-700/60 hover:bg-slate-700 transition">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+            <div class="input-group">
+                <label for="urlInput">Cole a URL de Vídeo ou Áudio:</label>
+                <div class="textarea-wrapper">
+                    <textarea id="urlInput" placeholder="https://exemplo.com/video.mp4 ou colchetes [https://...]"></textarea>
+                    <div class="input-actions-absolute">
+                        <button class="btn-mini" id="btnPaste">Colar</button>
+                        <button class="btn-mini" id="btnClear">✕</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Samples Selector for Easy Testing -->
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
-                <span class="text-slate-400 whitespace-nowrap text-[11px]"><i class="fa-solid fa-vial"></i> Testes rápidos:</span>
-                <button class="sample-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap transition" data-url="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">BigBuckBunny (MP4)</button>
-                <button class="sample-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap transition" data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">Áudio MP3</button>
-                <button class="sample-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap transition" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Stream HLS (.m3u8)</button>
+            <!-- Botões de Teste Rápido -->
+            <div class="quick-tests">
+                <span class="chip" onclick="setTestUrl('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">BigBuckBunny (MP4)</span>
+                <span class="chip" onclick="setTestUrl('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">Áudio MP3</span>
+                <span class="chip" onclick="setTestUrl('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')">Stream HLS</span>
             </div>
 
-            <!-- Primary Action Button -->
-            <button 
-                id="btn-process"
-                class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 active:scale-[0.99] text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 transition-all duration-200"
-            >
-                <i class="fa-solid fa-bolt"></i>
-                <span id="btn-text">Processar Link</span>
+            <!-- Botão de Ação -->
+            <button class="btn-primary" id="btnProcess">
+                ⚡ Processar Link
             </button>
-        </section>
 
-        <!-- Dynamic Output & Processing Box -->
-        <section id="output-section" class="hidden space-y-4">
-            
-            <div class="bg-slate-800/90 border border-sky-500/30 rounded-xl p-4 space-y-4 relative overflow-hidden">
-                <div class="h-1 w-full bg-slate-700 absolute top-0 left-0">
-                    <div id="progress-bar" class="h-full bg-sky-500 w-0 transition-all duration-300"></div>
+            <!-- Caixa de Resultado Dinâmica -->
+            <div class="result-box" id="resultBox">
+                <div class="result-header">
+                    <span id="resultStatus">✓ Link limpo e otimizado com sucesso!</span>
+                    <button class="btn-mini" id="btnCopy">Copiar Link</button>
                 </div>
+                <div class="link-output" id="cleanLinkOutput"></div>
 
-                <!-- Status Header -->
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-check"></i> Link limpo e otimizado com sucesso!
-                    </span>
-                    <span id="badge-protocol" class="text-[10px] bg-slate-700 text-slate-300 font-mono px-2 py-0.5 rounded-full border border-slate-600 uppercase">HTTPS</span>
+                <!-- Reproductor Multimedia Integrado -->
+                <div class="media-container" id="mediaContainer">
+                    <video id="videoPlayer" controls style="display:none;"></video>
+                    <audio id="audioPlayer" controls style="display:none; width:100%;"></audio>
                 </div>
-
-                <!-- Sanitized Link Output -->
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1">URL Processada & Limpa:</label>
-                    <div class="flex gap-2">
-                        <input 
-                            id="clean-url-output" 
-                            type="text" 
-                            readonly 
-                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-sky-300 font-mono focus:outline-none select-all"
-                        />
-                        <button 
-                            id="btn-copy" 
-                            class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition shrink-0"
-                            title="Copiar para área de transferência"
-                        >
-                            <i class="fa-regular fa-copy"></i>
-                            <span id="copy-btn-text">Copiar</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Metadata Badges -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
-                        <p class="text-[10px] text-slate-400">Tipo / Formato</p>
-                        <p id="meta-type" class="text-xs font-bold text-slate-200 mt-0.5">Detectando...</p>
-                    </div>
-                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
-                        <p class="text-[10px] text-slate-400">Extensão</p>
-                        <p id="meta-ext" class="text-xs font-bold text-slate-200 mt-0.5">.mp4</p>
-                    </div>
-                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
-                        <p class="text-[10px] text-slate-400">Dimensão / Duração</p>
-                        <p id="meta-extra" class="text-xs font-bold text-slate-200 mt-0.5">--</p>
-                    </div>
-                    <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 text-center">
-                        <p class="text-[10px] text-slate-400">Status da Fonte</p>
-                        <p id="meta-status" class="text-xs font-bold text-emerald-400 mt-0.5">Pronto para uso</p>
-                    </div>
-                </div>
-
-                <!-- Embedded Live Media Player Preview -->
-                <div class="pt-2 border-t border-slate-700/60">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-slate-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-play text-sky-400"></i> Pré-visualização ao vivo
-                        </span>
-                        <span class="text-[10px] text-slate-500">HTML5 Player</span>
-                    </div>
-
-                    <!-- Video Container -->
-                    <div id="video-preview-container" class="hidden rounded-xl overflow-hidden bg-black border border-slate-700 shadow-md">
-                        <video id="video-player" controls class="w-full max-h-64 object-contain">
-                            Seu navegador não suporta a tag de vídeo.
-                        </video>
-                    </div>
-
-                    <!-- Audio Container -->
-                    <div id="audio-preview-container" class="hidden rounded-xl bg-slate-900 p-3 border border-slate-700">
-                        <audio id="audio-player" controls class="w-full">
-                            Seu navegador não suporta o elemento de áudio.
-                        </audio>
-                    </div>
-
-                    <!-- Generic Link Warning for External Platforms -->
-                    <div id="external-preview-container" class="hidden rounded-xl bg-slate-900/80 p-4 border border-slate-700 text-center space-y-2">
-                        <i class="fa-solid fa-external-link text-slate-400 text-xl"></i>
-                        <p class="text-xs text-slate-300">Este link pertence a um protocolo ou plataforma externa.</p>
-                        <a id="external-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-sky-400 px-3 py-1.5 rounded-lg border border-slate-700 transition">
-                            Abrir Link Direto <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Local History Section -->
-        <section class="space-y-3 pt-2 border-t border-slate-800">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Histórico Recente
-                </h2>
-                <button id="btn-clear-history" class="text-[11px] text-slate-500 hover:text-rose-400 transition flex items-center gap-1">
-                    <i class="fa-regular fa-trash-can"></i> Limpar
-                </button>
             </div>
 
-            <!-- History List Container -->
-            <div id="history-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                <!-- Dynamically populated or empty state -->
-                <p id="history-empty" class="text-xs text-slate-600 text-center py-4 italic">Nenhum link processado recentemente.</p>
+            <!-- Histórico Recente -->
+            <div class="history-section">
+                <div class="history-header">
+                    <span>🕒 HISTÓRICO RECENTE</span>
+                    <button class="clear-history" id="btnClearHistory">Limpar</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="empty-history">Nenhum link processado recentemente.</div>
+                </div>
             </div>
-        </section>
+        </div>
 
-    </main>
-
-    <!-- Bottom Banner / Ad Space Placeholder -->
-    <footer class="w-full max-w-xl mt-4 bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 text-center text-xs text-slate-500 shadow-sm flex flex-col items-center justify-center min-h-[50px]">
-        <p class="font-medium text-slate-400">Espaço publicitário</p>
-        <p class="text-[10px] text-slate-600 mt-0.5">Monetização & Widgets de Terceiros</p>
-    </footer>
-
-    <!-- Toast Notification Message -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 border border-sky-500 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 z-50">
-        <i id="toast-icon" class="fa-solid fa-info-circle text-sky-400"></i>
-        <span id="toast-msg">Mensagem</span>
+        <!-- Anúncio Inferior -->
+        <div class="ad-container">
+            <span class="ad-badge">Ad</span>
+            <small>Espaço Publicitário - Monetag / AdMob</small>
+        </div>
     </div>
 
-    <!-- Application Script -->
+    <!-- Toast de Notificação -->
+    <div class="toast" id="toast">Copiado para o portapapeles!</div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Element References
-            const urlInput = document.getElementById('media-url');
-            const btnProcess = document.getElementById('btn-process');
-            const btnText = document.getElementById('btn-text');
-            const btnPaste = document.getElementById('btn-paste');
-            const btnClear = document.getElementById('btn-clear');
-            
-            const outputSection = document.getElementById('output-section');
-            const cleanUrlOutput = document.getElementById('clean-url-output');
-            const btnCopy = document.getElementById('btn-copy');
-            const copyBtnText = document.getElementById('copy-btn-text');
-            const progressBar = document.getElementById('progress-bar');
-            
-            const metaType = document.getElementById('meta-type');
-            const metaExt = document.getElementById('meta-ext');
-            const metaExtra = document.getElementById('meta-extra');
-            const metaStatus = document.getElementById('meta-status');
-            const badgeProtocol = document.getElementById('badge-protocol');
-            
-            const videoPreviewContainer = document.getElementById('video-preview-container');
-            const videoPlayer = document.getElementById('video-player');
-            const audioPreviewContainer = document.getElementById('audio-preview-container');
-            const audioPlayer = document.getElementById('audio-player');
-            const externalPreviewContainer = document.getElementById('external-preview-container');
-            const externalLinkBtn = document.getElementById('external-link-btn');
+        const urlInput = document.getElementById('urlInput');
+        const btnPaste = document.getElementById('btnPaste');
+        const btnClear = document.getElementById('btnClear');
+        const btnProcess = document.getElementById('btnProcess');
+        const resultBox = document.getElementById('resultBox');
+        const cleanLinkOutput = document.getElementById('cleanLinkOutput');
+        const btnCopy = document.getElementById('btnCopy');
+        const mediaContainer = document.getElementById('mediaContainer');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const historyList = document.getElementById('historyList');
+        const btnClearHistory = document.getElementById('btnClearHistory');
+        const toast = document.getElementById('toast');
 
-            const historyList = document.getElementById('history-list');
-            const historyEmpty = document.getElementById('history-empty');
-            const btnClearHistory = document.getElementById('btn-clear-history');
+        let history = JSON.parse(localStorage.getItem('media_history') || '[]');
 
-            // Quick Samples
-            document.querySelectorAll('.sample-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    urlInput.value = btn.getAttribute('data-url');
-                    processLink();
-                });
-            });
-
-            // Paste Button
-            btnPaste.addEventListener('click', async () => {
-                try {
-                    const text = await navigator.clipboard.readText();
-                    urlInput.value = text;
-                    showToast('Texto colado da área de transferência!', 'success');
-                } catch (err) {
-                    showToast('Por favor, cole manualmente no campo.', 'info');
-                }
-            });
-
-            // Clear Input Button
-            btnClear.addEventListener('click', () => {
-                urlInput.value = '';
-                outputSection.classList.add('hidden');
-                resetPlayers();
-            });
-
-            // Process Button Click
-            btnProcess.addEventListener('click', processLink);
-
-            // Clean & Sanitize URL Logic
-            function sanitizeUrl(rawText) {
-                if (!rawText) return '';
-                let text = rawText.trim();
-                
-                // Remove Markdown or bracket wrappers e.g. [http...](http...)
-                const markdownMatch = text.match(/\[.*?\]\((https?:\/\/[^\s]+)\)/);
-                if (markdownMatch && markdownMatch[1]) {
-                    text = markdownMatch[1];
-                } else {
-                    // Extract first valid http/https match if text has extra garbage
-                    const urlMatch = text.match(/(https?:\/\/[^\s\]\)\>"]+)/);
-                    if (urlMatch && urlMatch[0]) {
-                        text = urlMatch[0];
-                    }
-                }
-
-                // Remove trailing bracket characters if present
-                text = text.replace(/[\]\)\>]+$/, '');
-
-                return text;
+        function renderHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="empty-history">Nenhum link processado recentemente.</div>';
+                return;
             }
+            historyList.innerHTML = '';
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.textContent = item;
+                div.onclick = () => {
+                    urlInput.value = item;
+                    processLink();
+                };
+                historyList.appendChild(div);
+            });
+        }
 
-            function processLink() {
-                const rawUrl = urlInput.value;
-                const cleanUrl = sanitizeUrl(rawUrl);
+        function saveToHistory(link) {
+            if (!history.includes(link)) {
+                history.unshift(link);
+                if (history.length > 10) history.pop();
+                localStorage.setItem('media_history', JSON.stringify(history));
+                renderHistory();
+            }
+        }
 
-                if (!cleanUrl) {
-                    showToast('Por favor, insira uma URL válida para processar.', 'error');
-                    return;
+        function showToast(message = 'Copiado com sucesso!') {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function setTestUrl(url) {
+            urlInput.value = url;
+            processLink();
+        }
+
+        btnPaste.onclick = async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                urlInput.value = text;
+            } catch (err) {
+                showToast('Erro ao colar da área de transferência');
+            }
+        };
+
+        btnClear.onclick = () => {
+            urlInput.value = '';
+            resultBox.classList.remove('active');
+            videoPlayer.pause();
+            audioPlayer.pause();
+        };
+
+        btnClearHistory.onclick = () => {
+            history = [];
+            localStorage.removeItem('media_history');
+            renderHistory();
+        };
+
+        function cleanUrl(raw) {
+            let cleaned = raw.trim();
+            // Remove colchetes extras se houverem
+            if (cleaned.startsWith('[') && cleaned.endsWith(']')) {
+                cleaned = cleaned.slice(1, -1);
+            }
+            // Extrair URL caso venha colada junto com texto
+            const match = cleaned.match(/https?:\/\/[^\s]+/);
+            if (match) {
+                cleaned = match[0];
+            }
+            return cleaned;
+        }
+
+        function processLink() {
+            const rawVal = urlInput.value;
+            if (!rawVal.trim()) return;
+
+            const finalUrl = cleanUrl(rawVal);
+            cleanLinkOutput.textContent = finalUrl;
+            resultBox.classList.add('active');
+            saveToHistory(finalUrl);
+
+            // Configurar player de mídia com base na extensão
+            videoPlayer.pause();
+            audioPlayer.pause();
+            videoPlayer.src = '';
+            audioPlayer.src = '';
+            videoPlayer.style.display = 'none';
+            audioPlayer.style.display = 'none';
+            mediaContainer.style.display = 'none';
+
+            if (finalUrl.match(/\.(mp4|webm|ogg|m3u8)$/i) || finalUrl.includes('googlevideo.com') || finalUrl.includes('comondatastorage.googleapis.com')) {
+                mediaContainer.style.display = 'block';
+                if (finalUrl.match(/\.(mp3|wav|ogg)$/i)) {
+                    audioPlayer.src = finalUrl;
+                    audioPlayer.style.display = 'block';
+                } else {
+                    videoPlayer.src = finalUrl;
+                    videoPlayer.style.display = 'block';
                 }
+            }
+        }
 
-                // Show loading status
-                btnProcess.disabled = true;
-                btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
-                outputSection.classList.remove('hidden');
-                progressBar.style.width = '30%';
+        btnProcess.onclick = processLink;
 
-                setTimeout(() => {
-                    progressBar.style.width = '70%';
-                    
-                    // Update Output Field
-                    cleanUrlOutput.value = cleanUrl;
-                    
-                    // Protocol badge
-                    try {
-                        const parsedUrl = new URL(cleanUrl);
-                        badgeProtocol.textContent = parsedUrl.protocol.replace(':', '').toUpperCase();
-                    } catch (e) {
-                        badgeProtocol.textContent = 'HTTP';
-                    }
+        btnCopy.onclick = () => {
+            navigator.clipboard.writeText(cleanLinkOutput.textContent);
+            showToast('Link copiado para a área de transferência!');
+        };
 
-                    // Reset Preview Elements
-                    resetPlayers();
-
-                    // Detect Media Type & Format
-                    const lowerUrl = cleanUrl.toLowerCase();
-                    let detectedType = 'Desconhecido';
-                    let detectedExt = 'LINK';
-                    let extraInfo = 'Mídia Web';
-
-                    if (lowerUrl.includes('.mp4') || lowerUrl.includes('video')) {
-                        detectedType = 'Vídeo MP4';
-                        detectedExt = '.mp4';
-            
+        // Inicializar histórico ao carregar
+        renderHistory();
+    </script>
+</body>
+</html>
