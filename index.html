@@ -514,7 +514,7 @@
             return cleaned.replace(/[\r\n]+/g, "").trim();
         }
 
-                function processLink() {
+                        function processLink() {
             const rawVal = urlInput.value;
             if (!rawVal.trim()) return;
 
@@ -543,9 +543,18 @@
                 videoPlayer.style.display = 'block';
                 videoPlayer.load();
 
+                // Capturar si el video da error de formato para que no quede en gris roto
+                videoPlayer.onerror = function() {
+                    showToast('Erro: Formato incompatível ou bloqueado pelo servidor!');
+                    videoPlayer.style.display = 'none';
+                };
+
                 if (document.pictureInPictureEnabled) {
                     btnPiP.style.display = 'block';
                 }
+            }
+                        }
+        
             }
                 }
         
